@@ -3,6 +3,8 @@ package com.autobots.automanager.controles;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,33 +28,63 @@ public class ClienteControle {
 	private ClienteSelecionador selecionador;
 
 	@GetMapping("{id}")
-	public Cliente obterCliente(@PathVariable long id) {
+	public ResponseEntity<Cliente> obterCliente(@PathVariable long id) {
 		List<Cliente> clientes = repositorio.findAll();
-		return selecionador.selecionar(clientes, id);
+		Cliente cliente = selecionador.selecionar(clientes, id);
+		if (cliente == null) {
+			ResponseEntity<Cliente> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return resposta; 
+		} else {
+			ResponseEntity<Cliente> resposta = new ResponseEntity<>(HttpStatus.FOUND);
+			return resposta;
+		}
 	}
 
 	@GetMapping
-	public List<Cliente> obterClientes() {
+	public ResponseEntity<List<Cliente>> obterClientes() {
 		List<Cliente> clientes = repositorio.findAll();
-		return clientes;
+		if (clientes.isEmpty()) {
+			ResponseEntity<List<Cliente>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return resposta;
+		} else {
+			ResponseEntity<List<Cliente>> resposta = new ResponseEntity<>(HttpStatus.FOUND);
+			return resposta;
+		}
 	}
 
 	@PostMapping
-	public void cadastrarCliente(@RequestBody Cliente cliente) {
-		repositorio.save(cliente);
+	public ResponseEntity<?> cadastrarCliente(@RequestBody Cliente cliente) {
+		HttpStatus status = HttpStatus.CONFLICT;
+		if (cliente.getId() == null) {
+			repositorio.save(cliente);
+			status = HttpStatus.CREATED;
+		}
+		return new ResponseEntity<>(status);
 	}
 
 	@PutMapping
-	public void atualizarCliente(@RequestBody Cliente atualizacao) {
+	public ResponseEntity<?> atualizarCliente(@RequestBody Cliente atualizacao) {
+		HttpStatus status = HttpStatus.CONFLICT;
 		Cliente cliente = repositorio.getById(atualizacao.getId());
-		ClienteAtualizador atualizador = new ClienteAtualizador();
-		atualizador.atualizar(cliente, atualizacao);
-		repositorio.save(cliente);
+		if (cliente != null) {
+			ClienteAtualizador atualizador = new ClienteAtualizador();
+			atualizador.atualizar(cliente, atualizacao);
+			repositorio.save(cliente);
+			status = HttpStatus.OK;
+		} else {
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return new ResponseEntity<>(status);
 	}
 
 	@DeleteMapping
-	public void excluirCliente(@RequestBody Cliente exclusao) {
+	public ResponseEntity<?> excluirCliente(@RequestBody Cliente exclusao) {
+		HttpStatus status = HttpStatus.BAD_REQUEST;
 		Cliente cliente = repositorio.getById(exclusao.getId());
-		repositorio.delete(cliente);
+		if (cliente != null) {
+			repositorio.delete(cliente);
+			status = HttpStatus.OK;
+		}
+		return new ResponseEntity<>(status);
 	}
 }

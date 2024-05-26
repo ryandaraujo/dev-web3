@@ -3,6 +3,8 @@ package com.autobots.automanager.controles;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,33 +28,63 @@ public class DocumentoControle {
     private DocumentoSelecionador selecionador;
     
     @GetMapping("{id}")
-    public Documento obterDocumento(@PathVariable Long id) {
-        List<Documento> documento = repositorio.findAll();
-        return selecionador.selecionar(documento, id);
+    public ResponseEntity<Documento> obterDocumento(@PathVariable Long id) {
+        List<Documento> documentos = repositorio.findAll();
+        Documento documento = selecionador.selecionar(documentos, id);
+        if (documento == null) {
+			ResponseEntity<Documento> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return resposta; 
+		} else {
+			ResponseEntity<Documento> resposta = new ResponseEntity<>(HttpStatus.FOUND);
+			return resposta;
+		}
     }
 
     @GetMapping
-    public List<Documento> obterDocumentos() {
+    public ResponseEntity<List<Documento>> obterDocumentos() {
         List<Documento> documentos = repositorio.findAll();
-        return documentos;
+        if (documentos.isEmpty()) {
+			ResponseEntity<List<Documento>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return resposta;
+		} else {
+			ResponseEntity<List<Documento>> resposta = new ResponseEntity<>(HttpStatus.FOUND);
+			return resposta;
+		}
     }
 
     @PostMapping
-    public void cadastrarDocumento(@RequestBody Documento documento) {
-        repositorio.save(documento);
+    public ResponseEntity<?> cadastrarDocumento(@RequestBody Documento documento) {
+        HttpStatus status = HttpStatus.CONFLICT;
+		if (documento.getId() == null) {
+			repositorio.save(documento);
+			status = HttpStatus.CREATED;
+		}
+		return new ResponseEntity<>(status);
     }
 
     @PutMapping
-    public void atualizarDocumento(@RequestBody Documento atualizacao) {
-        Documento documento = repositorio.getById(atualizacao.getId());
-        DocumentoAtualizador atualizador = new DocumentoAtualizador();
-        atualizador.atualizar(documento, atualizacao);
-        repositorio.save(documento);
+    public ResponseEntity<?> atualizarDocumento(@RequestBody Documento atualizacao) {
+        HttpStatus status = HttpStatus.CONFLICT;
+		Documento documento = repositorio.getById(atualizacao.getId());
+		if (documento != null) {
+			DocumentoAtualizador atualizador = new DocumentoAtualizador();
+			atualizador.atualizar(documento, atualizacao);
+			repositorio.save(documento);
+			status = HttpStatus.OK;
+		} else {
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return new ResponseEntity<>(status);
     }
 
     @DeleteMapping
-    public void excluirDocumento(@RequestBody Documento exclusao) {
-        Documento documento = repositorio.getById(exclusao.getId());
-        repositorio.delete(documento);
+    public ResponseEntity<?> excluirDocumento(@RequestBody Documento exclusao) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+		Documento documento = repositorio.getById(exclusao.getId());
+		if (documento != null) {
+			repositorio.delete(documento);
+			status = HttpStatus.OK;
+		}
+		return new ResponseEntity<>(status);
     }
 }

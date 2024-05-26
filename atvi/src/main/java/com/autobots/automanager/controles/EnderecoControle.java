@@ -3,6 +3,8 @@ package com.autobots.automanager.controles;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,33 +28,63 @@ public class EnderecoControle {
     private EnderecoSelecionador selecionador;
 
     @GetMapping("{id}")
-    public Endereco obterEndereco(@PathVariable Long id) {
-        List<Endereco> endereco = repositorio.findAll();
-        return selecionador.selecionar(endereco, id);
+    public ResponseEntity<Endereco> obterEndereco(@PathVariable Long id) {
+        List<Endereco> enderecos = repositorio.findAll();
+		Endereco endereco = selecionador.selecionar(enderecos, id);
+		if (endereco == null) {
+			ResponseEntity<Endereco> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return resposta; 
+		} else {
+			ResponseEntity<Endereco> resposta = new ResponseEntity<>(HttpStatus.FOUND);
+			return resposta;
+		}
     }
 
     @GetMapping
-    public List<Endereco> obterEnderecos() {
+    public ResponseEntity<List<Endereco>> obterEnderecos() {
         List<Endereco> enderecos = repositorio.findAll();
-        return enderecos;
+		if (enderecos.isEmpty()) {
+			ResponseEntity<List<Endereco>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+			return resposta;
+		} else {
+			ResponseEntity<List<Endereco>> resposta = new ResponseEntity<>(HttpStatus.FOUND);
+			return resposta;
+		}
     }
 
     @PostMapping
-    public void cadastrarEndereco(@RequestBody Endereco endereco) {
-        repositorio.save(endereco);
+    public ResponseEntity<?> cadastrarEndereco(@RequestBody Endereco endereco) {
+        HttpStatus status = HttpStatus.CONFLICT;
+		if (endereco.getId() == null) {
+			repositorio.save(endereco);
+			status = HttpStatus.CREATED;
+		}
+		return new ResponseEntity<>(status);
     }
 
     @PutMapping
-    public void atualizarEndereco(@RequestBody Endereco atualizacao) {
-        Endereco endereco = repositorio.getById(atualizacao.getId());
-        EnderecoAtualizador atualizador = new EnderecoAtualizador();
-        atualizador.atualizar(endereco, atualizacao);
-        repositorio.save(endereco);
+    public ResponseEntity<?> atualizarEndereco(@RequestBody Endereco atualizacao) {
+        HttpStatus status = HttpStatus.CONFLICT;
+		Endereco endereco = repositorio.getById(atualizacao.getId());
+		if (endereco != null) {
+			EnderecoAtualizador atualizador = new EnderecoAtualizador();
+			atualizador.atualizar(endereco, atualizacao);
+			repositorio.save(endereco);
+			status = HttpStatus.OK;
+		} else {
+			status = HttpStatus.BAD_REQUEST;
+		}
+		return new ResponseEntity<>(status);
     }
 
     @DeleteMapping
-    public void excluirEndereco(@RequestBody Endereco exclusao) {
-        Endereco endereco = repositorio.getById(exclusao.getId());
-        repositorio.delete(endereco);
+    public ResponseEntity<?> excluirEndereco(@RequestBody Endereco exclusao) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+		Endereco endereco = repositorio.getById(exclusao.getId());
+		if (endereco != null) {
+			repositorio.delete(endereco);
+			status = HttpStatus.OK;
+		}
+		return new ResponseEntity<>(status);
     }
 }
