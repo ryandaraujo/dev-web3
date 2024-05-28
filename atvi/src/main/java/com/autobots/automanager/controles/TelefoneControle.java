@@ -1,6 +1,7 @@
 package com.autobots.automanager.controles;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -65,11 +66,12 @@ public class TelefoneControle {
     @PutMapping
     public ResponseEntity<?> atualizarTelefone(@RequestBody Telefone atualizacao) {
         HttpStatus status = HttpStatus.CONFLICT;
-		Telefone telefone = repositorio.getById(atualizacao.getId());
+		Optional<Telefone> telefone = repositorio.findById(atualizacao.getId());
 		if (telefone != null) {
 			TelefoneAtualizador atualizador = new TelefoneAtualizador();
-			atualizador.atualizar(telefone, atualizacao);
-			repositorio.save(telefone);
+			Telefone telefoneExistente = telefone.get();
+			atualizador.atualizar(telefoneExistente, atualizacao);
+			repositorio.save(telefoneExistente);
 			status = HttpStatus.OK;
 		} else {
 			status = HttpStatus.BAD_REQUEST;
@@ -80,9 +82,10 @@ public class TelefoneControle {
     @DeleteMapping
     public ResponseEntity<?> excluirTelefone(@RequestBody Telefone exclusao) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-		Telefone telefone = repositorio.getById(exclusao.getId());
+		Optional<Telefone> telefone = repositorio.findById(exclusao.getId());
 		if (telefone != null) {
-			repositorio.delete(telefone);
+			Telefone telefoneExistente = telefone.get();
+			repositorio.delete(telefoneExistente);
 			status = HttpStatus.OK;
 		}
 		return new ResponseEntity<>(status);

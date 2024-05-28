@@ -1,6 +1,7 @@
 package com.autobots.automanager.controles;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -65,11 +66,12 @@ public class ClienteControle {
 	@PutMapping
 	public ResponseEntity<?> atualizarCliente(@RequestBody Cliente atualizacao) {
 		HttpStatus status = HttpStatus.CONFLICT;
-		Cliente cliente = repositorio.getById(atualizacao.getId());
+		Optional<Cliente> cliente = repositorio.findById(atualizacao.getId());
 		if (cliente != null) {
+			Cliente clienteExistente = cliente.get();
 			ClienteAtualizador atualizador = new ClienteAtualizador();
-			atualizador.atualizar(cliente, atualizacao);
-			repositorio.save(cliente);
+			atualizador.atualizar(clienteExistente, atualizacao);
+			repositorio.save(clienteExistente);
 			status = HttpStatus.OK;
 		} else {
 			status = HttpStatus.BAD_REQUEST;
@@ -80,9 +82,10 @@ public class ClienteControle {
 	@DeleteMapping
 	public ResponseEntity<?> excluirCliente(@RequestBody Cliente exclusao) {
 		HttpStatus status = HttpStatus.BAD_REQUEST;
-		Cliente cliente = repositorio.getById(exclusao.getId());
+		Optional<Cliente> cliente = repositorio.findById(exclusao.getId());
 		if (cliente != null) {
-			repositorio.delete(cliente);
+			Cliente clienteExistente = cliente.get();
+			repositorio.delete(clienteExistente);
 			status = HttpStatus.OK;
 		}
 		return new ResponseEntity<>(status);

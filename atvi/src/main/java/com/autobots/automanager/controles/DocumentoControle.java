@@ -1,6 +1,7 @@
 package com.autobots.automanager.controles;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -65,11 +66,12 @@ public class DocumentoControle {
     @PutMapping
     public ResponseEntity<?> atualizarDocumento(@RequestBody Documento atualizacao) {
         HttpStatus status = HttpStatus.CONFLICT;
-		Documento documento = repositorio.getById(atualizacao.getId());
+		Optional<Documento> documento = repositorio.findById(atualizacao.getId());
 		if (documento != null) {
+			Documento documentoExistente = documento.get();
 			DocumentoAtualizador atualizador = new DocumentoAtualizador();
-			atualizador.atualizar(documento, atualizacao);
-			repositorio.save(documento);
+			atualizador.atualizar(documentoExistente, atualizacao);
+			repositorio.save(documentoExistente);
 			status = HttpStatus.OK;
 		} else {
 			status = HttpStatus.BAD_REQUEST;
@@ -80,9 +82,10 @@ public class DocumentoControle {
     @DeleteMapping
     public ResponseEntity<?> excluirDocumento(@RequestBody Documento exclusao) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-		Documento documento = repositorio.getById(exclusao.getId());
+		Optional<Documento> documento = repositorio.findById(exclusao.getId());
 		if (documento != null) {
-			repositorio.delete(documento);
+			Documento documentoExistente = documento.get();
+			repositorio.delete(documentoExistente);
 			status = HttpStatus.OK;
 		}
 		return new ResponseEntity<>(status);

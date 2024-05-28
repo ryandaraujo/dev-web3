@@ -1,6 +1,7 @@
 package com.autobots.automanager.controles;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -65,11 +66,12 @@ public class EnderecoControle {
     @PutMapping
     public ResponseEntity<?> atualizarEndereco(@RequestBody Endereco atualizacao) {
         HttpStatus status = HttpStatus.CONFLICT;
-		Endereco endereco = repositorio.getById(atualizacao.getId());
+		Optional<Endereco> endereco = repositorio.findById(atualizacao.getId());
 		if (endereco != null) {
+			Endereco enderecoExistente = endereco.get();
 			EnderecoAtualizador atualizador = new EnderecoAtualizador();
-			atualizador.atualizar(endereco, atualizacao);
-			repositorio.save(endereco);
+			atualizador.atualizar(enderecoExistente, atualizacao);
+			repositorio.save(enderecoExistente);
 			status = HttpStatus.OK;
 		} else {
 			status = HttpStatus.BAD_REQUEST;
@@ -80,9 +82,10 @@ public class EnderecoControle {
     @DeleteMapping
     public ResponseEntity<?> excluirEndereco(@RequestBody Endereco exclusao) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-		Endereco endereco = repositorio.getById(exclusao.getId());
+		Optional<Endereco> endereco = repositorio.findById(exclusao.getId());
 		if (endereco != null) {
-			repositorio.delete(endereco);
+			Endereco enderecoExistente = endereco.get();
+			repositorio.delete(enderecoExistente);
 			status = HttpStatus.OK;
 		}
 		return new ResponseEntity<>(status);
