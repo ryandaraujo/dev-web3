@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.atualizadores.ClienteAtualizador;
 import com.autobots.automanager.entidades.Cliente;
+import com.autobots.automanager.hateoas.AdicionadorLinkCliente;
 import com.autobots.automanager.repositorios.ClienteRepositorio;
 import com.autobots.automanager.selecionadores.ClienteSelecionador;
 
@@ -27,6 +28,8 @@ public class ClienteControle {
 	private ClienteRepositorio repositorio;
 	@Autowired
 	private ClienteSelecionador selecionador;
+	@Autowired
+	private AdicionadorLinkCliente adicionadorLink;
 
 	@GetMapping("{id}")
 	public ResponseEntity<Cliente> obterCliente(@PathVariable long id) {
@@ -36,7 +39,8 @@ public class ClienteControle {
 			ResponseEntity<Cliente> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			return resposta; 
 		} else {
-			ResponseEntity<Cliente> resposta = new ResponseEntity<>(HttpStatus.FOUND);
+			adicionadorLink.adicionarLink(cliente);
+			ResponseEntity<Cliente> resposta = new ResponseEntity<Cliente>(cliente, HttpStatus.FOUND);
 			return resposta;
 		}
 	}
@@ -48,7 +52,8 @@ public class ClienteControle {
 			ResponseEntity<List<Cliente>> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
 			return resposta;
 		} else {
-			ResponseEntity<List<Cliente>> resposta = new ResponseEntity<>(HttpStatus.FOUND);
+			adicionadorLink.adicionarLink(clientes);
+			ResponseEntity<List<Cliente>> resposta = new ResponseEntity<List<Cliente>>(clientes, HttpStatus.FOUND);
 			return resposta;
 		}
 	}
