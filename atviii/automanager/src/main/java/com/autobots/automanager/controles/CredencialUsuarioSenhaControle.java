@@ -15,36 +15,35 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.autobots.automanager.atualizadores.AtualizadorCredencialCodigoBarra;
-import com.autobots.automanager.entitades.CredencialCodigoBarra;
-import com.autobots.automanager.hateoas.AdicionadorLinkCredencialCodigo;
-import com.autobots.automanager.repositorios.RepositorioCredencialCodigoBarra;
-import com.autobots.automanager.selecionadores.SelecionadorCredencialCodigoBarra;
+import com.autobots.automanager.atualizadores.AtualizadorCredencialUsuarioSenha;
+import com.autobots.automanager.entitades.CredencialUsuarioSenha;
+import com.autobots.automanager.hateoas.AdicionadorLinkCredencialUsuario;
+import com.autobots.automanager.repositorios.RepositorioCredencialUsuarioSenha;
+import com.autobots.automanager.selecionadores.SelecionadorCredencialUsuarioSenha;
 
 @RestController
-@RequestMapping("credenciais/codigoBarra")
-public class CredencialCodigoBarraControle {
+@RequestMapping("credenciais/usuarioSenha")
+public class CredencialUsuarioSenhaControle {
+    @Autowired
+    RepositorioCredencialUsuarioSenha repositorio;
 
     @Autowired
-    RepositorioCredencialCodigoBarra repositorioCodigoBarra;
+    SelecionadorCredencialUsuarioSenha selecionador;
 
     @Autowired
-    SelecionadorCredencialCodigoBarra selecionador;
+    AdicionadorLinkCredencialUsuario adicionadorLink;
 
     @Autowired
-    AdicionadorLinkCredencialCodigo adicionadorLink;
-
-    @Autowired
-    AtualizadorCredencialCodigoBarra atualizador;
+    AtualizadorCredencialUsuarioSenha atualizador;
 
     @PostMapping
-    public ResponseEntity<?> cadastrarCodigoBarra(
-        @RequestBody CredencialCodigoBarra credencial
+    public ResponseEntity<?> cadastrarUsuarioSenha(
+        @RequestBody CredencialUsuarioSenha credencial
     ) {
         try {
             HttpStatus status = HttpStatus.CONFLICT;
             if (credencial.getId() == null) {
-                repositorioCodigoBarra.save(credencial);
+                repositorio.save(credencial);
                 status = HttpStatus.CREATED;
             }
 		return new ResponseEntity<>(status);
@@ -54,12 +53,12 @@ public class CredencialCodigoBarraControle {
     }
 
     @GetMapping
-    public ResponseEntity<?> obterCodigosBarra() {
+    public ResponseEntity<?> obterUsuariosSenha() {
         try {
-            List<CredencialCodigoBarra> credenciais = repositorioCodigoBarra.findAll();
+            List<CredencialUsuarioSenha> credenciais = repositorio.findAll();
             if (!credenciais.isEmpty()) {
                 adicionadorLink.adicionarLink(credenciais);
-                ResponseEntity<List<CredencialCodigoBarra>> resposta = new ResponseEntity<>(credenciais, HttpStatus.OK);
+                ResponseEntity<List<CredencialUsuarioSenha>> resposta = new ResponseEntity<>(credenciais, HttpStatus.OK);
                 return resposta;
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -70,16 +69,16 @@ public class CredencialCodigoBarraControle {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> obterCodigoBarra(@PathVariable Long id) {
+    public ResponseEntity<?> obterUsuarioSenha(@PathVariable Long id) {
         try {
-            List<CredencialCodigoBarra> credenciais = repositorioCodigoBarra.findAll();
-            CredencialCodigoBarra credencial = selecionador.selecionar(credenciais, id);
+            List<CredencialUsuarioSenha> credenciais = repositorio.findAll();
+            CredencialUsuarioSenha credencial = selecionador.selecionar(credenciais, id);
             if (credencial == null) {
-                ResponseEntity<CredencialCodigoBarra> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                ResponseEntity<CredencialUsuarioSenha> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 return resposta; 
             } else {
                 adicionadorLink.adicionarLink(credencial);
-                ResponseEntity<CredencialCodigoBarra> resposta = new ResponseEntity<CredencialCodigoBarra>(credencial, HttpStatus.FOUND);
+                ResponseEntity<CredencialUsuarioSenha> resposta = new ResponseEntity<CredencialUsuarioSenha>(credencial, HttpStatus.FOUND);
                 return resposta;
             }
         } catch(Exception e) {
@@ -88,29 +87,29 @@ public class CredencialCodigoBarraControle {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> excluirCodigoBarra(@RequestBody CredencialCodigoBarra exclusao) {
+    public ResponseEntity<?> excluirUsuarioSenha(@RequestBody CredencialUsuarioSenha exclusao) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-		Optional<CredencialCodigoBarra> credencial = repositorioCodigoBarra.findById(
+		Optional<CredencialUsuarioSenha> credencial = repositorio.findById(
             exclusao.getId()
         );
 		if (credencial != null) {
-			CredencialCodigoBarra credencialExistente = credencial.get();
-			repositorioCodigoBarra.delete(credencialExistente);
+			CredencialUsuarioSenha credencialExistente = credencial.get();
+			repositorio.delete(credencialExistente);
 			status = HttpStatus.OK;
 		}
 		return new ResponseEntity<>(status);
 	}
 
     @PutMapping
-    public ResponseEntity<?> atualizarCredencial(@RequestBody CredencialCodigoBarra atualizacao) {
+    public ResponseEntity<?> atualizarUsuarioSenha(@RequestBody CredencialUsuarioSenha atualizacao) {
         HttpStatus status = HttpStatus.CONFLICT;
-		Optional<CredencialCodigoBarra> credencial = repositorioCodigoBarra.findById(
+		Optional<CredencialUsuarioSenha> credencial = repositorio.findById(
             atualizacao.getId()
         );
 		if (credencial != null) {
-			CredencialCodigoBarra credencialExistente = credencial.get();
+			CredencialUsuarioSenha credencialExistente = credencial.get();
 			atualizador.atualizar(credencialExistente, atualizacao);
-			repositorioCodigoBarra.save(credencialExistente);
+			repositorio.save(credencialExistente);
 			status = HttpStatus.OK;
 		} else {
 			status = HttpStatus.BAD_REQUEST;
