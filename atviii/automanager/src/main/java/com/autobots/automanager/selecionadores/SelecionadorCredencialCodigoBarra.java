@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Component;
 
-import com.autobots.automanager.entitades.CredencialCodigoBarra;
+import com.autobots.automanager.entidades.CredencialCodigoBarra;
 
 @Component
 public class SelecionadorCredencialCodigoBarra {

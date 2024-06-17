@@ -1,14 +1,16 @@
 package com.autobots.automanager.atualizadores;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.autobots.automanager.entitades.Credencial;
-import com.autobots.automanager.entitades.Documento;
-import com.autobots.automanager.entitades.Email;
-import com.autobots.automanager.entitades.Telefone;
-import com.autobots.automanager.entitades.Usuario;
+import com.autobots.automanager.entidades.Credencial;
+import com.autobots.automanager.entidades.Documento;
+import com.autobots.automanager.entidades.Email;
+import com.autobots.automanager.entidades.Telefone;
+import com.autobots.automanager.entidades.Usuario;
 import com.autobots.automanager.utils.StringVerificadorNulo;
 
+@Component
 public class AtualizadorUsuario {
     @Autowired
     StringVerificadorNulo verificador;

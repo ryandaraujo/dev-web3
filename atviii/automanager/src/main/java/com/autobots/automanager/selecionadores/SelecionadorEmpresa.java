@@ -2,8 +2,11 @@ package com.autobots.automanager.selecionadores;
 
 import java.util.List;
 
-import com.autobots.automanager.entitades.Empresa;
+import org.springframework.stereotype.Component;
 
+import com.autobots.automanager.entidades.Empresa;
+
+@Component
 public class SelecionadorEmpresa {
     public Empresa selecionar(List<Empresa> empresas, Long id) {
         Empresa selecionado = null;

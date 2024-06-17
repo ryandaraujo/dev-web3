@@ -15,32 +15,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.autobots.automanager.atualizadores.AtualizadorEmail;
-import com.autobots.automanager.entidades.Email;
-import com.autobots.automanager.hateoas.AdicionadorLinkEmail;
-import com.autobots.automanager.repositorios.RepositorioEmail;
-import com.autobots.automanager.selecionadores.SelecionadorEmail;
+import com.autobots.automanager.atualizadores.AtualizadorServico;
+import com.autobots.automanager.entidades.Servico;
+import com.autobots.automanager.hateoas.AdicionadorLinkServico;
+import com.autobots.automanager.repositorios.RepositorioServico;
+import com.autobots.automanager.selecionadores.SelecionadorServico;
 
 @RestController
-@RequestMapping("emails")
-public class EmailControle {
+@RequestMapping("servicos")
+public class ServicoControle {
     @Autowired
-    RepositorioEmail repositorio;
+    RepositorioServico repositorio;
     @Autowired
-    AtualizadorEmail atualizador;
+    SelecionadorServico selecionador;
     @Autowired
-    SelecionadorEmail selecionador;
+    AtualizadorServico atualizador;
     @Autowired
-    AdicionadorLinkEmail adicionadorLink;
+    AdicionadorLinkServico adicionadorLink;
 
     @PostMapping
-    public ResponseEntity<?> cadastrarEmail(
-        @RequestBody Email email
-    ) {
+    public ResponseEntity<?> cadastrarServico(@RequestBody Servico servico) {
         try {
             HttpStatus status = HttpStatus.CONFLICT;
-            if (email.getId() == null) {
-                repositorio.save(email);
+            if (servico.getId() == null) {
+                repositorio.save(servico);
                 status = HttpStatus.CREATED;
             }
 		return new ResponseEntity<>(status);
@@ -50,12 +48,12 @@ public class EmailControle {
     }
 
     @GetMapping
-    public ResponseEntity<?> obterEmails() {
+    public ResponseEntity<?> obterServicos() {
         try {
-            List<Email> emails = repositorio.findAll();
-            if (!emails.isEmpty()) {
-                adicionadorLink.adicionarLink(emails);
-                ResponseEntity<List<Email>> resposta = new ResponseEntity<>(emails, HttpStatus.OK);
+            List<Servico> servicos = repositorio.findAll();
+            if (!servicos.isEmpty()) {
+                adicionadorLink.adicionarLink(servicos);
+                ResponseEntity<List<Servico>> resposta = new ResponseEntity<>(servicos, HttpStatus.OK);
                 return resposta;
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -66,16 +64,16 @@ public class EmailControle {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> obterEmail(@PathVariable Long id) {
+    public ResponseEntity<?> obterServico(@PathVariable Long id) {
         try {
-            List<Email> emails = repositorio.findAll();
-            Email email = selecionador.selecionar(emails, id);
-            if (email == null) {
-                ResponseEntity<Email> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            List<Servico> servicos = repositorio.findAll();
+            Servico servico = selecionador.selecionar(servicos, id);
+            if (servico == null) {
+                ResponseEntity<Servico> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 return resposta; 
             } else {
-                adicionadorLink.adicionarLink(email);
-                ResponseEntity<Email> resposta = new ResponseEntity<Email>(email, HttpStatus.FOUND);
+                adicionadorLink.adicionarLink(servico);
+                ResponseEntity<Servico> resposta = new ResponseEntity<Servico>(servico, HttpStatus.FOUND);
                 return resposta;
             }
         } catch(Exception e) {
@@ -84,29 +82,27 @@ public class EmailControle {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> excluirEmail(@RequestBody Email exclusao) {
+    public ResponseEntity<?> excluirServico(@RequestBody Servico exclusao) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-		Optional<Email> email = repositorio.findById(
-            exclusao.getId()
-        );
-		if (email != null) {
-			Email emailExistente = email.get();
-			repositorio.delete(emailExistente);
+		List<Servico> servicos = repositorio.findAll();
+        Servico servico = selecionador.selecionar(servicos, exclusao.getId());
+		if (servico != null) {
+			repositorio.delete(servico);
 			status = HttpStatus.OK;
 		}
 		return new ResponseEntity<>(status);
 	}
 
     @PutMapping
-    public ResponseEntity<?> atualizarEmail(@RequestBody Email atualizacao) {
+    public ResponseEntity<?> atualizarServico(@RequestBody Servico atualizacao) {
         HttpStatus status = HttpStatus.CONFLICT;
-		Optional<Email> email = repositorio.findById(
+		Optional<Servico> servico = repositorio.findById(
             atualizacao.getId()
         );
-		if (email != null) {
-			Email emailExistente = email.get();
-			atualizador.atualizar(emailExistente, atualizacao);
-			repositorio.save(emailExistente);
+		if (servico != null) {
+			Servico servicoExistente = servico.get();
+			atualizador.atualizar(servicoExistente, atualizacao);
+			repositorio.save(servicoExistente);
 			status = HttpStatus.OK;
 		} else {
 			status = HttpStatus.BAD_REQUEST;

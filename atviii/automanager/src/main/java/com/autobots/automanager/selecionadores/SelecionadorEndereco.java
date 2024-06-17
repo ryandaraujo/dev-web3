@@ -2,8 +2,11 @@ package com.autobots.automanager.selecionadores;
 
 import java.util.List;
 
-import com.autobots.automanager.entitades.Endereco;
+import org.springframework.stereotype.Component;
 
+import com.autobots.automanager.entidades.Endereco;
+
+@Component
 public class SelecionadorEndereco {
     public Endereco selecionar(List<Endereco> enderecos, Long id) {
         Endereco selecionado = null;

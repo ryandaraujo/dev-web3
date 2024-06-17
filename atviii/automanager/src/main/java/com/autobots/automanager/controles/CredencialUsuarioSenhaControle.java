@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.atualizadores.AtualizadorCredencialUsuarioSenha;
-import com.autobots.automanager.entitades.CredencialUsuarioSenha;
+import com.autobots.automanager.entidades.CredencialUsuarioSenha;
 import com.autobots.automanager.hateoas.AdicionadorLinkCredencialUsuario;
 import com.autobots.automanager.repositorios.RepositorioCredencialUsuarioSenha;
 import com.autobots.automanager.selecionadores.SelecionadorCredencialUsuarioSenha;

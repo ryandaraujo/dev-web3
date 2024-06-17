@@ -1,10 +1,12 @@
 package com.autobots.automanager.atualizadores;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.autobots.automanager.entitades.Servico;
+import com.autobots.automanager.entidades.Servico;
 import com.autobots.automanager.utils.StringVerificadorNulo;
 
+@Component
 public class AtualizadorServico {
     @Autowired
     StringVerificadorNulo verificador;

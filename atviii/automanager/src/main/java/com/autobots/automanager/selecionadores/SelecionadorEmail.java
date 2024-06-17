@@ -2,8 +2,11 @@ package com.autobots.automanager.selecionadores;
 
 import java.util.List;
 
-import com.autobots.automanager.entitades.Email;
+import org.springframework.stereotype.Component;
 
+import com.autobots.automanager.entidades.Email;
+
+@Component
 public class SelecionadorEmail {
     public Email selecionar(List<Email> emails, Long id) {
         Email selecionado = null;

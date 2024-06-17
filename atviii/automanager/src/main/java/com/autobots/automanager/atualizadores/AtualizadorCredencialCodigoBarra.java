@@ -1,7 +1,10 @@
 package com.autobots.automanager.atualizadores;
 
-import com.autobots.automanager.entitades.CredencialCodigoBarra;
+import org.springframework.stereotype.Component;
 
+import com.autobots.automanager.entidades.CredencialCodigoBarra;
+
+@Component
 public class AtualizadorCredencialCodigoBarra {
 
     public void atualizar(CredencialCodigoBarra credencial, CredencialCodigoBarra atualizacao) {

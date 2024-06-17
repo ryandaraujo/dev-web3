@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.autobots.automanager.atualizadores.AtualizadorEndereco;
-import com.autobots.automanager.entitades.Endereco;
+import com.autobots.automanager.entidades.Endereco;
 import com.autobots.automanager.hateoas.AdicionadorLinkEndereco;
 import com.autobots.automanager.repositorios.RepositorioEndereco;
 import com.autobots.automanager.selecionadores.SelecionadorEndereco;

@@ -4,11 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.autobots.automanager.entitades.Mercadoria;
-import com.autobots.automanager.entitades.Usuario;
+import com.autobots.automanager.entidades.Mercadoria;
+import com.autobots.automanager.entidades.Usuario;
 import com.autobots.automanager.repositorios.RepositorioMercadoria;
 
+@Component
 public class AtualizadorMercadorias {
     @Autowired
     AtualizadorMercadoria atualizadorMercadoria;

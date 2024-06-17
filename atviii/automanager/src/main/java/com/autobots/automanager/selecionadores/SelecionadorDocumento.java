@@ -2,8 +2,11 @@ package com.autobots.automanager.selecionadores;
 
 import java.util.List;
 
-import com.autobots.automanager.entitades.Documento;
+import org.springframework.stereotype.Component;
 
+import com.autobots.automanager.entidades.Documento;
+
+@Component
 public class SelecionadorDocumento {
     public Documento selecionar(List<Documento> documentos, Long id) {
         Documento selecionado = null;

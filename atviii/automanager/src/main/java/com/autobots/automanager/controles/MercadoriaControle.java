@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.autobots.automanager.atualizadores.AtualizadorMercadoria;
-import com.autobots.automanager.entitades.Mercadoria;
+import com.autobots.automanager.entidades.Mercadoria;
 import com.autobots.automanager.hateoas.AdicionadorLinkMercadoria;
 import com.autobots.automanager.repositorios.RepositorioMercadoria;
 import com.autobots.automanager.selecionadores.SelecionadorMercadoria;

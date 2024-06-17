@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.atualizadores.AtualizadorDocumento;
-import com.autobots.automanager.entitades.Documento;
+import com.autobots.automanager.entidades.Documento;
 import com.autobots.automanager.hateoas.AdicionadorLinkDocumento;
 import com.autobots.automanager.repositorios.RepositorioDocumento;
 import com.autobots.automanager.selecionadores.SelecionadorDocumento;

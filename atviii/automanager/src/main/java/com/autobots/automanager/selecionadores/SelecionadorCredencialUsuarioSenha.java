@@ -2,8 +2,11 @@ package com.autobots.automanager.selecionadores;
 
 import java.util.List;
 
-import com.autobots.automanager.entitades.CredencialUsuarioSenha;
+import org.springframework.stereotype.Component;
 
+import com.autobots.automanager.entidades.CredencialUsuarioSenha;
+
+@Component
 public class SelecionadorCredencialUsuarioSenha {
     public CredencialUsuarioSenha selecionar(List<CredencialUsuarioSenha> credenciais, Long id) {
         CredencialUsuarioSenha selecionado = null;

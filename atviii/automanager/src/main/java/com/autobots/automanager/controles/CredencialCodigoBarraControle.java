@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.autobots.automanager.atualizadores.AtualizadorCredencialCodigoBarra;
-import com.autobots.automanager.entitades.CredencialCodigoBarra;
+import com.autobots.automanager.entidades.CredencialCodigoBarra;
 import com.autobots.automanager.hateoas.AdicionadorLinkCredencialCodigo;
 import com.autobots.automanager.repositorios.RepositorioCredencialCodigoBarra;
 import com.autobots.automanager.selecionadores.SelecionadorCredencialCodigoBarra;

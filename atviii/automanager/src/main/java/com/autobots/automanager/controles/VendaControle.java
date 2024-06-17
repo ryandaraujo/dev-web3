@@ -15,32 +15,30 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.autobots.automanager.atualizadores.AtualizadorEmail;
-import com.autobots.automanager.entidades.Email;
-import com.autobots.automanager.hateoas.AdicionadorLinkEmail;
-import com.autobots.automanager.repositorios.RepositorioEmail;
-import com.autobots.automanager.selecionadores.SelecionadorEmail;
+import com.autobots.automanager.atualizadores.AtualizadorVenda;
+import com.autobots.automanager.entidades.Venda;
+import com.autobots.automanager.hateoas.AdicionadorLinkVenda;
+import com.autobots.automanager.repositorios.RepositorioVenda;
+import com.autobots.automanager.selecionadores.SelecionadorVenda;
 
 @RestController
-@RequestMapping("emails")
-public class EmailControle {
+@RequestMapping("vendas")
+public class VendaControle {
     @Autowired
-    RepositorioEmail repositorio;
+    RepositorioVenda repositorio;
     @Autowired
-    AtualizadorEmail atualizador;
+    SelecionadorVenda selecionador;
     @Autowired
-    SelecionadorEmail selecionador;
+    AtualizadorVenda atualizador;
     @Autowired
-    AdicionadorLinkEmail adicionadorLink;
+    AdicionadorLinkVenda adicionadorLink;
 
     @PostMapping
-    public ResponseEntity<?> cadastrarEmail(
-        @RequestBody Email email
-    ) {
+    public ResponseEntity<?> cadastrarVenda(@RequestBody Venda venda) {
         try {
             HttpStatus status = HttpStatus.CONFLICT;
-            if (email.getId() == null) {
-                repositorio.save(email);
+            if (venda.getId() == null) {
+                repositorio.save(venda);
                 status = HttpStatus.CREATED;
             }
 		return new ResponseEntity<>(status);
@@ -50,12 +48,12 @@ public class EmailControle {
     }
 
     @GetMapping
-    public ResponseEntity<?> obterEmails() {
+    public ResponseEntity<?> obterVendas() {
         try {
-            List<Email> emails = repositorio.findAll();
-            if (!emails.isEmpty()) {
-                adicionadorLink.adicionarLink(emails);
-                ResponseEntity<List<Email>> resposta = new ResponseEntity<>(emails, HttpStatus.OK);
+            List<Venda> vendas = repositorio.findAll();
+            if (!vendas.isEmpty()) {
+                adicionadorLink.adicionarLink(vendas);
+                ResponseEntity<List<Venda>> resposta = new ResponseEntity<>(vendas, HttpStatus.OK);
                 return resposta;
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -66,16 +64,16 @@ public class EmailControle {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> obterEmail(@PathVariable Long id) {
+    public ResponseEntity<?> obterVenda(@PathVariable Long id) {
         try {
-            List<Email> emails = repositorio.findAll();
-            Email email = selecionador.selecionar(emails, id);
-            if (email == null) {
-                ResponseEntity<Email> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            List<Venda> vendas = repositorio.findAll();
+            Venda venda = selecionador.selecionar(vendas, id);
+            if (venda == null) {
+                ResponseEntity<Venda> resposta = new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 return resposta; 
             } else {
-                adicionadorLink.adicionarLink(email);
-                ResponseEntity<Email> resposta = new ResponseEntity<Email>(email, HttpStatus.FOUND);
+                adicionadorLink.adicionarLink(venda);
+                ResponseEntity<Venda> resposta = new ResponseEntity<Venda>(venda, HttpStatus.FOUND);
                 return resposta;
             }
         } catch(Exception e) {
@@ -84,29 +82,27 @@ public class EmailControle {
     }
 
     @DeleteMapping
-    public ResponseEntity<?> excluirEmail(@RequestBody Email exclusao) {
+    public ResponseEntity<?> excluirVenda(@RequestBody Venda exclusao) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
-		Optional<Email> email = repositorio.findById(
-            exclusao.getId()
-        );
-		if (email != null) {
-			Email emailExistente = email.get();
-			repositorio.delete(emailExistente);
+		List<Venda> vendas = repositorio.findAll();
+        Venda venda = selecionador.selecionar(vendas, exclusao.getId());
+		if (venda != null) {
+			repositorio.delete(venda);
 			status = HttpStatus.OK;
 		}
 		return new ResponseEntity<>(status);
 	}
 
     @PutMapping
-    public ResponseEntity<?> atualizarEmail(@RequestBody Email atualizacao) {
+    public ResponseEntity<?> atualizarVenda(@RequestBody Venda atualizacao) {
         HttpStatus status = HttpStatus.CONFLICT;
-		Optional<Email> email = repositorio.findById(
+		Optional<Venda> venda = repositorio.findById(
             atualizacao.getId()
         );
-		if (email != null) {
-			Email emailExistente = email.get();
-			atualizador.atualizar(emailExistente, atualizacao);
-			repositorio.save(emailExistente);
+		if (venda != null) {
+			Venda vendaExistente = venda.get();
+			atualizador.atualizar(vendaExistente, atualizacao);
+			repositorio.save(vendaExistente);
 			status = HttpStatus.OK;
 		} else {
 			status = HttpStatus.BAD_REQUEST;

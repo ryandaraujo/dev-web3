@@ -1,4 +1,4 @@
-package com.autobots.automanager.entitades;
+package com.autobots.automanager.entidades;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

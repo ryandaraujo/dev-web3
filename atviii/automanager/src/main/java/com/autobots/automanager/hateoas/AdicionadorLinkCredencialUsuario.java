@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.stereotype.Component;
 
 import com.autobots.automanager.controles.CredencialUsuarioSenhaControle;
-import com.autobots.automanager.entitades.CredencialUsuarioSenha;
+import com.autobots.automanager.entidades.CredencialUsuarioSenha;
 
+@Component
 public class AdicionadorLinkCredencialUsuario implements AdicionadorLink<CredencialUsuarioSenha>{
     @Override
     public void adicionarLink(List<CredencialUsuarioSenha> lista){

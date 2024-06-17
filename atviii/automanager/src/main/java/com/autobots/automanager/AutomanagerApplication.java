@@ -1,29 +1,42 @@
 package com.autobots.automanager;
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import com.autobots.automanager.entitades.CredencialUsuarioSenha;
-import com.autobots.automanager.entitades.Documento;
-import com.autobots.automanager.entitades.Email;
-import com.autobots.automanager.entitades.Empresa;
-import com.autobots.automanager.entitades.Endereco;
-import com.autobots.automanager.entitades.Mercadoria;
-import com.autobots.automanager.entitades.Servico;
-import com.autobots.automanager.entitades.Telefone;
-import com.autobots.automanager.entitades.Usuario;
-import com.autobots.automanager.entitades.Veiculo;
-import com.autobots.automanager.entitades.Venda;
+import com.autobots.automanager.entidades.CredencialUsuarioSenha;
+import com.autobots.automanager.entidades.Documento;
+import com.autobots.automanager.entidades.Email;
+import com.autobots.automanager.entidades.Empresa;
+import com.autobots.automanager.entidades.Endereco;
+import com.autobots.automanager.entidades.Mercadoria;
+import com.autobots.automanager.entidades.Servico;
+import com.autobots.automanager.entidades.Telefone;
+import com.autobots.automanager.entidades.Usuario;
+import com.autobots.automanager.entidades.Veiculo;
+import com.autobots.automanager.entidades.Venda;
 import com.autobots.automanager.enumeracoes.PerfilUsuario;
 import com.autobots.automanager.enumeracoes.TipoDocumento;
 import com.autobots.automanager.enumeracoes.TipoVeiculo;
 import com.autobots.automanager.repositorios.RepositorioEmpresa;
 
 @SpringBootApplication
+@ComponentScan({
+	"com.autobots.automanager.controles",
+	"com.autobots.automanager.selecionadores",
+	"com.autobots.automanager.hateoas",
+	"com.autobots.automanager.atualizadores",
+	"com.autobots.automanager.utils"
+})
+@EntityScan("com.autobots.automanager.entidades")
+@EnableJpaRepositories(basePackages = "com.autobots.automanager.repositorios")
 public class AutomanagerApplication implements CommandLineRunner {
 
 	@Autowired
@@ -215,7 +228,7 @@ public class AutomanagerApplication implements CommandLineRunner {
 		venda.setCadastro(new Date());
 		venda.setCliente(cliente);
 		venda.getMercadorias().add(rodaLigaLeve);
-		venda.setIdentificacao("1234698745");
+		venda.setIdentificacao(UUID.randomUUID().toString());
 		venda.setFuncionario(funcionario);
 		venda.getServicos().add(trocaRodas);
 		venda.getServicos().add(alinhamento);
@@ -245,18 +258,18 @@ public class AutomanagerApplication implements CommandLineRunner {
 		balanceamento.setNome("balanceamento de rodas");
 		balanceamento.setValor(30);
 		
-		Venda venda2 = new Venda();
-		venda2.setCadastro(new Date());
-		venda2.setCliente(cliente);
-		venda2.getMercadorias().add(rodaLigaLeve2);
-		venda2.setIdentificacao("1234698749");
-		venda2.setFuncionario(funcionario);
-		venda2.getServicos().add(balanceamento);
-		venda2.getServicos().add(alinhamento2);
-		venda2.setVeiculo(veiculo);
-		veiculo.getVendas().add(venda2);
+		// Venda venda2 = new Venda();
+		// venda2.setCadastro(new Date());
+		// venda2.setCliente(cliente);
+		// venda2.getMercadorias().add(rodaLigaLeve2);
+		// venda2.setIdentificacao(UUID.randomUUID().toString());
+		// venda2.setFuncionario(funcionario);
+		// venda2.getServicos().add(balanceamento);
+		// venda2.getServicos().add(alinhamento2);
+		// venda2.setVeiculo(veiculo);
+		// veiculo.getVendas().add(venda2);
 
-		empresa.getVendas().add(venda2);
+		// empresa.getVendas().add(venda2);
 		
 		repositorioEmpresa.save(empresa);
 

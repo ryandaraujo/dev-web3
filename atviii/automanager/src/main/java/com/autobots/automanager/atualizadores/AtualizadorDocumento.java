@@ -1,7 +1,10 @@
 package com.autobots.automanager.atualizadores;
 
-import com.autobots.automanager.entitades.Documento;
+import org.springframework.stereotype.Component;
 
+import com.autobots.automanager.entidades.Documento;
+
+@Component
 public class AtualizadorDocumento {
     public void atualizar(Documento documento, Documento atualizacao) {
         if(documento.getTipo() != atualizacao.getTipo() && atualizacao.getTipo() != null) {

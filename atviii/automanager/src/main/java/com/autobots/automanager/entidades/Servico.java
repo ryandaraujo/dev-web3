@@ -1,4 +1,4 @@
-package com.autobots.automanager.entitades;
+package com.autobots.automanager.entidades;
 
 import org.springframework.hateoas.RepresentationModel;
 
@@ -11,32 +11,18 @@ import jakarta.persistence.Id;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class Endereco extends RepresentationModel<Endereco>{
+public class Servico extends RepresentationModel<Servico>{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
 	@Column(nullable = false)
-	private String estado;
-
+	private String nome;
 	@Column(nullable = false)
-	private String cidade;
-
-	@Column(nullable = false)
-	private String bairro;
-
-	@Column(nullable = false)
-	private String rua;
-
-	@Column(nullable = false)
-	private String numero;
-
-	@Column(nullable = false)
-	private String codigoPostal;
-
+	private double valor;
 	@Column
-	private String informacoesAdicionais;
+	private String descricao;
 }

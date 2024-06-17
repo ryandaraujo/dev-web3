@@ -2,9 +2,11 @@ package com.autobots.automanager.selecionadores;
 
 import java.util.List;
 
-import com.autobots.automanager.entitades.Mercadoria;
+import org.springframework.stereotype.Component;
 
+import com.autobots.automanager.entidades.Mercadoria;
 
+@Component
 public class SelecionadorMercadoria {
     public Mercadoria selecionar(List<Mercadoria> mercadorias, Long id) {
         Mercadoria selecionado = null;

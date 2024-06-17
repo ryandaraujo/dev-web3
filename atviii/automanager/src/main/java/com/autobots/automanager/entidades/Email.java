@@ -1,6 +1,4 @@
-package com.autobots.automanager.entitades;
-
-import java.util.Date;
+package com.autobots.automanager.entidades;
 
 import org.springframework.hateoas.RepresentationModel;
 
@@ -16,29 +14,10 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Entity
-public class Mercadoria extends RepresentationModel<Mercadoria>{
+public class Email extends RepresentationModel<Email>{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
 	@Column(nullable = false)
-	private Date validade;
-
-	@Column(nullable = false)
-	private Date fabricao;
-
-	@Column(nullable = false)
-	private Date cadastro;
-
-	@Column(nullable = false)
-	private String nome;
-
-	@Column(nullable = false)
-	private long quantidade;
-
-	@Column(nullable = false)
-	private double valor;
-
-	@Column
-	private String descricao;
+	private String endereco;
 }

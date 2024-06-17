@@ -1,10 +1,12 @@
 package com.autobots.automanager.atualizadores;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import com.autobots.automanager.entitades.Endereco;
+import com.autobots.automanager.entidades.Endereco;
 import com.autobots.automanager.utils.StringVerificadorNulo;
 
+@Component
 public class AtualizadorEndereco {
     @Autowired
     StringVerificadorNulo verificador;

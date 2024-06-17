@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import com.autobots.automanager.atualizadores.AtualizadorEmpresa;
-import com.autobots.automanager.entitades.Empresa;
+import com.autobots.automanager.entidades.Empresa;
 import com.autobots.automanager.hateoas.AdicionadorLinkEmpresa;
 import com.autobots.automanager.repositorios.RepositorioEmpresa;
 import com.autobots.automanager.selecionadores.SelecionadorEmpresa;
